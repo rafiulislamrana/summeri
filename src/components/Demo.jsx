@@ -1,14 +1,29 @@
 import { useState } from "react";
 import {copy, linkIcon, loader, tick} from "../assets";
+import { useLazyGetSummaryQuery } from "../services/article";
+
+
 const Demo = () => {
+    const [getSummary, {error, isFetching}] = useLazyGetSummaryQuery();
     const [article, setArticle] = useState({
         url: "",
         summery: "",
     });
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
-       
+        const {data} = await getSummary({
+            articleUrl: article.url
+        });
+
+        if(data?.summary){
+            const newArticle = {...article, summery: data.summary}
+
+            setArticle(newArticle);
+
+            console.log(newArticle)
+        }
+        console.log(data)
         
     }
 
